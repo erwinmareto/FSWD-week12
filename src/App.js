@@ -3,18 +3,21 @@ import { Button, Container, Text, Center } from "@chakra-ui/react";
 import useStore from "./stores/zustand";
 
 function Board() {
+  // With global state
   // const squares = Array(9).fill(null);
   const squares = useStore((state) => state.squares);
   const setSquares = useStore((state) => state.setSquares);
-  // const [squares, setSquares] = React.useState(Array(9).fill(null));
   const nextValue = useStore((state) => state.nextValue);
   const setNextValue = useStore((state) => state.setNextValue);
-  // const [nextValue, setNextValue] = React.useState('');
   const winner = useStore((state) => state.winner);
   const setWinner = useStore((state) => state.setWinner);
-  // const [winner, setWinner] = React.useState('');
   const status = useStore((state) => state.status);
   const setStatus = useStore((state) => state.setStatus);
+
+  // Without global state
+  // const [squares, setSquares] = React.useState(Array(9).fill(null));
+  // const [nextValue, setNextValue] = React.useState('');
+  // const [winner, setWinner] = React.useState('');
   // const [status, setStatus] = React.useState('Click to start')
 
   function selectSquare(square) {
@@ -29,14 +32,14 @@ function Board() {
     });
     setSquares(currentBoard);
 
-    const value = calculateWinner(currentBoard);
-    if (value) {
-      setWinner(value);
+    const currentWinner = calculateWinner(currentBoard);
+    if (currentWinner) {
+      setWinner(currentWinner);
     }
     // setWinner(calculateWinner(currentBoard))
-    // setStatus(calculateStatus(winner, squares, nextValue));
-    setStatus(calculateStatus(value, squares, calculateNextValue(squares)));
-    console.log(calculateStatus(winner, squares, nextValue));
+
+    setStatus(calculateStatus(currentWinner, squares, nextValue));
+    // setStatus(calculateStatus(value, squares, calculateNextValue(squares)));
 
   }
 
@@ -50,6 +53,7 @@ function Board() {
   function renderSquare(i) {
     return (
       <Button
+      
         isDisabled={winner}
         className="square"
         size="md"
